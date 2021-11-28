@@ -1,0 +1,7 @@
+# Database
+db/psql/pgdata
+
+# Python Related
+.venv
+venv
+__pycache__
