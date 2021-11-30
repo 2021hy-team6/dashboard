@@ -43,10 +43,12 @@ class Psql:
             print('Successfully Connected')
         else:
             print('Failed to Connect')
-    
+        
+        return self.psql_pool is not None
+        
     @contextmanager
     def _get_conn(self):
-        assert self.psql_pool, "PostgreSQL is not connected"
+        assert self._set_connection(), "PostgreSQL is not connected"
         
         conn = self.psql_pool.getconn()
         try:
@@ -63,8 +65,16 @@ class Psql:
         finally:
             cur.close()    
     
+    def get_metadata(self):
+        return {'is_alive': self._set_connection(), 'config': self.config}
+    
     # Execute Query
     def query(self, sql, params = ()):
         with self._get_conn() as conn, self._get_cursor(conn) as cur:
             cur.execute(sql, params)
             return cur.fetchall()
+
+    def execute(self, sql, params=()):
+        with self._get_conn() as conn, self._get_cursor(conn) as cur:
+            cur.execute(sql, params)
+            conn.commit()
