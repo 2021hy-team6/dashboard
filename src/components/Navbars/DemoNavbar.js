@@ -141,6 +141,7 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
+          {/*
           <form>
             <InputGroup className="no-border">
               <Input placeholder="Search..." />
@@ -151,6 +152,7 @@ function DemoNavbar(props) {
               </InputGroupAddon>
             </InputGroup>
           </form>
+          */}
           <Nav navbar>
             <NavItem>
               <Link to="#pablo" className="nav-link">

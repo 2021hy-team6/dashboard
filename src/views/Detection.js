@@ -23,7 +23,26 @@ import { Card, CardImg, CardText, CardHeader, CardBody, Row, Col } from "reactst
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 
-function Icons() {
+const detectionSample = [
+  {
+    src: "https://user-images.githubusercontent.com/59322692/144555947-77a52c16-18e0-4ffe-9447-d7a261e502f9.png",
+    categories: "Glass, Can, Plastic"
+  },
+  {
+    src: "https://user-images.githubusercontent.com/59322692/144555947-77a52c16-18e0-4ffe-9447-d7a261e502f9.png",
+    categories: "Glass, Can, Plastic"
+  },
+  {
+    src: "https://user-images.githubusercontent.com/59322692/144555947-77a52c16-18e0-4ffe-9447-d7a261e502f9.png",
+    categories: "Glass, Can, Plastic"
+  },
+  {
+    src: "https://user-images.githubusercontent.com/59322692/144555947-77a52c16-18e0-4ffe-9447-d7a261e502f9.png",
+    categories: "Glass, Can, Plastic"
+  },
+]
+
+function Detection() {
   return (
     <>
       <PanelHeader size="sm" />
@@ -39,20 +58,19 @@ function Icons() {
               </CardHeader>
               <CardBody>
                 <Row>
-                  {icons.map((prop, key) => {
+                  {detectionSample.map((data) => {
                     return (
-                      <Col
-                        lg={2}
-                        md={3}
-                        sm={4}
-                        xs={6}
-                        className="font-icon-list"
-                        key={key}
-                      >
-                        <div className="font-icon-detail">
-                          <i className={"now-ui-icons " + prop} />
-                          <p>{prop}</p>
-                        </div>
+                      <Col  lg={3}
+                            md={3}
+                            sm={4}
+                            xs={6}>
+                        <Card>
+                          <CardImg top src={data['src']}
+                                      alt="detections image" />
+                          <CardBody>
+                            <CardText>Glass, Bottle, Plastic</CardText>
+                          </CardBody>
+                        </Card>
                       </Col>
                     );
                   })}
@@ -66,4 +84,4 @@ function Icons() {
   );
 }
 
-export default Icons;
+export default Detection;

@@ -177,7 +177,7 @@ const dashboardPanelChart = {
           backgroundColor: gradientFill,
           borderWidth: 2,
           tension: 0.4,
-          data: [50, 150, 100, 190, 130, 90, 150, 160, 120, 140, 190, 95],
+          data: [50, 150, 100, 190, 130, 90, 150, 160, 120, 140, 190],
         },
       ],
     };
@@ -318,7 +318,7 @@ const dashboardAllProductsChart = {
           backgroundColor: gradientFill,
           borderWidth: 2,
           tension: 0.4,
-          data: [40, 500, 650, 700, 1200, 1250, 1300, 1900],
+          data: [85.5, 87.7, 89.1, 83.1, 84.4, 89.2, 90.1, 87.2],
         },
       ],
     };
@@ -345,11 +345,6 @@ const dashboard24HoursPerformanceChart = {
         "May",
         "June",
         "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
       ],
       datasets: [
         {
@@ -364,7 +359,7 @@ const dashboard24HoursPerformanceChart = {
           pointRadius: 4,
           fill: true,
           borderWidth: 1,
-          data: [80, 99, 86, 96, 123, 85, 100, 75, 88, 90, 123, 155],
+          data: [80, 99, 86, 96, 123, 85, 100],
         },
       ],
     };

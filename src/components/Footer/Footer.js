@@ -28,6 +28,11 @@ function Footer(props) {
         <nav>
           <ul>
             <li>
+              <a>Recycle Assistant Dashboard</a>
+              <a href="https://2021hy-team6.github.io/projects-blog/se/">
+                Official Blog
+              </a>
+              {/*
               <a
                 href="https://www.creative-tim.com?ref=nudr-footer"
                 target="_blank"
@@ -50,6 +55,7 @@ function Footer(props) {
               >
                 Blog
               </a>
+              */}
             </li>
           </ul>
         </nav>

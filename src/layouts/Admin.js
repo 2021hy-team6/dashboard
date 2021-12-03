@@ -34,7 +34,7 @@ var ps;
 
 function Admin(props) {
   const location = useLocation();
-  const [backgroundColor, setBackgroundColor] = React.useState("blue");
+  const [backgroundColor, setBackgroundColor] = React.useState("green");
   const mainPanel = React.useRef();
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -53,9 +53,11 @@ function Admin(props) {
     document.scrollingElement.scrollTop = 0;
     mainPanel.current.scrollTop = 0;
   }, [location]);
+  /*
   const handleColorClick = (color) => {
     setBackgroundColor(color);
   };
+  */
   return (
     <div className="wrapper">
       <Sidebar {...props} routes={routes} backgroundColor={backgroundColor} />
@@ -75,10 +77,12 @@ function Admin(props) {
         </Switch>
         <Footer fluid />
       </div>
+      {/*
       <FixedPlugin
         bgColor={backgroundColor}
         handleColorClick={handleColorClick}
       />
+      */}
     </div>
   );
 }

@@ -118,4 +118,13 @@ const icons = [
   "users_single-02",
 ];
 
-export default icons;
+const detections = [
+  "ui-2_settings-90",
+  "ui-2_time-alarm",
+  "ui-1_email-85",
+  "users_circle-08",
+  "users_single-02",
+  "users_single-02",
+]
+
+export default detections;

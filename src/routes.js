@@ -16,6 +16,8 @@
 
 */
 import Dashboard from "views/Dashboard.js";
+import Detection from "views/Detection.js";
+/*
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
 import Typography from "views/Typography.js";
@@ -23,6 +25,7 @@ import TableList from "views/TableList.js";
 import Maps from "views/Maps.js";
 import Upgrade from "views/Upgrade.js";
 import UserPage from "views/UserPage.js";
+*/
 
 var dashRoutes = [
   {
@@ -32,6 +35,21 @@ var dashRoutes = [
     component: Dashboard,
     layout: "/admin",
   },
+  {
+    path: "/detection",
+    name: "Detection",
+    icon: "design_image",
+    component: Detection,
+    layout: "/admin",
+  },
+  {
+    path: "/export",
+    name: "Exports",
+    icon: "arrows-1_share-66",
+    component: Detection,
+    layout: "/admin",
+  },
+  /*
   {
     path: "/icons",
     name: "Icons",
@@ -82,5 +100,6 @@ var dashRoutes = [
     component: Upgrade,
     layout: "/admin",
   },
+  */
 ];
 export default dashRoutes;
