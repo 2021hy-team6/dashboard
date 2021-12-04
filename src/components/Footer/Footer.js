@@ -29,15 +29,7 @@ function Footer(props) {
           <ul>
             <li>
               <a
-                href="https://www.creative-tim.com?ref=nudr-footer"
-                target="_blank"
-              >
-                Creative Tim
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://presentation.creative-tim.com?ref=nudr-footer"
+                href="https://2021hy-team6.github.io/projects-blog/"
                 target="_blank"
               >
                 About Us
@@ -45,7 +37,7 @@ function Footer(props) {
             </li>
             <li>
               <a
-                href="https://blog.creative-tim.com?ref=nudr-footer"
+                href="https://2021hy-team6.github.io/projects-blog/se/"
                 target="_blank"
               >
                 Blog

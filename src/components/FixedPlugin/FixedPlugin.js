@@ -95,7 +95,7 @@ function FixedPlugin(props) {
             </div>
           </li>
 
-          <li className="button-container">
+          {/* <li className="button-container">
             <a
               href="https://www.creative-tim.com/product/now-ui-dashboard-pro-react?ref=nudr-fixed-plugin"
               target="_blank"
@@ -116,7 +116,7 @@ function FixedPlugin(props) {
             >
               Documentation
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

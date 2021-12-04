@@ -58,11 +58,11 @@ function Sidebar(props) {
           </div>
         </a>
         <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
+          href="https://2021hy-team6.github.io/projects-blog/se/"
           className="simple-text logo-normal"
           target="_blank"
         >
-          Creative Tim
+          Recycling Assistant
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
