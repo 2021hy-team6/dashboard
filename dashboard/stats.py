@@ -1,5 +1,6 @@
 import re
 import datetime
+from stats_sql import stats_sql as sql
 
 class Stats:
     def __init__(self, psql):
@@ -18,72 +19,33 @@ class Stats:
         
         return dttm
     
-    def realtime(self, date_time=None):
+    def _label_and_value(self, rows, label_col='label', value_col='value'):
+        result = {'label': [], 'value': []}
+        
+        for row in rows:
+            result['label'].append(row[label_col])
+            result['value'].append(row[value_col])
+        
+        return result
+        
+    def day_ratio(self, date_time=None):
         dttm = self._dttm_or_now(date_time)
-        
-        # TODO 
-        
-        return dict()
-    
-    def categories(self, date_time=None):
-        dttm = self._dttm_or_now(date_time)
-        
-        sql_string = f"""
-SELECT S.sup_name AS sup_name
-     , COUNT(T1.sup_id) AS cnt
-	 , ROUND(COUNT(T1.sup_id)::numeric / MAX(T1.total_cnt), 3) AS ratio
-  FROM (SELECT C.sup_id
-		     , count(*) OVER() AS total_cnt
-		  FROM image I
-			 , detection D
-			 , category C
-		 WHERE I.img_id = D.img_id
-		   AND D.obj_name = C.obj_name
-		   AND timestamp %s <= I.created_at
-		   AND I.created_at <= (timestamp %s + interval '1' day)) T1
- RIGHT OUTER JOIN super_category S
-	ON T1.sup_id = S.sup_id
- GROUP BY S.sup_name
- ORDER BY cnt DESC;
-        """
         
         # Execute Query
         dt_string = dttm.strftime('%Y-%m-%d 00:00:00')
-        rows = self.psql.query(sql_string, (dt_string, dt_string))
+        rows = self.psql.query(sql['day_ratio'], (dt_string, dt_string))
         
         return rows
     
-    def dailygraph(self, date_time=None):
+    def day_cnt(self, date_time=None):
         dttm = self._dttm_or_now(date_time)
-        
-        sql_string = f"""
-SELECT T3.hour
-     , COALESCE(T3.sup_name, 'Total') AS sup_name
-	 , count(T1.hour) AS cnt
-  FROM (SELECT extract(hour from created_at) AS hour
-			 , C.sup_id
-		  FROM image I
-			 , detection D
-			 , category C
-		 WHERE I.img_id = D.img_id
-		   AND D.obj_name = C.obj_name
-		   AND timestamp %s <= I.created_at
-		   AND I.created_at <= (timestamp %s + interval '1' day)) T1
- RIGHT OUTER JOIN
-       (SELECT T2.hour, S.sup_id, S.sup_name
-		  FROM generate_series(0, 23) AS T2(hour)
-		     , super_category S
-	   ) T3 ON (T1.hour = T3.hour AND T1.sup_id = T3.sup_id)
- GROUP BY T3.hour, ROLLUP(T3.sup_name)
- ORDER BY T3.hour, T3.sup_name;
-        """
         
         # Execute Query
         dt_string = dttm.strftime('%Y-%m-%d 00:00:00')
-        rows = self.psql.query(sql_string, (dt_string, dt_string))
+        rows = self.psql.query(sql['day_cnt'], (dt_string, dt_string))
         
         # Parse results
-        result = {'label': [i for i in range(0, 24)]}
+        result = {'label': [row['label'] for row in rows]}
         
         sup_names = set([row['sup_name'] for row in rows])
         for sup_name in sup_names:
@@ -91,3 +53,47 @@ SELECT T3.hour
                                 if row['sup_name'] == sup_name]
             
         return result
+    
+    def week_usage(self, date_time=None):
+        dttm = self._dttm_or_now(date_time)
+        
+        # Execute Query
+        dt_string = dttm.strftime('%Y-%m-%d 00:00:00')
+        rows = self.psql.query(sql['week_usage'], (dt_string, dt_string, dt_string))
+        
+        return self._label_and_value(rows)
+
+    def day_rec(self, date_time=None):
+        dttm = self._dttm_or_now(date_time)
+        
+        # Execute Query
+        dt_string = dttm.strftime('%Y-%m-%d 00:00:00')
+        rows = self.psql.query(sql['day_rec'], (dt_string, dt_string))
+        
+        return self._label_and_value(rows)
+    
+    def day_time(self, date_time=None):
+        dttm = self._dttm_or_now(date_time)
+        
+        # Execute Query
+        dt_string = dttm.strftime('%Y-%m-%d 00:00:00')
+        rows = self.psql.query(sql['day_time'], (dt_string, dt_string))
+        
+        return self._label_and_value(rows)
+
+    def mon_comp(self, date_time=None):
+        dttm = self._dttm_or_now(date_time)
+        
+        # Execute Query
+        params = [x for y in [(dttm.year, dttm.month) for z in range(4)] for x in y]
+        rows = self.psql.query(sql['mon_comp'], tuple(params))
+        
+        return rows
+
+    def ann_cnt(self, date_time=None):
+        dttm = self._dttm_or_now(date_time)
+        
+        # Execute Query
+        rows = self.psql.query(sql['ann_cnt'], (dttm.year, dttm.year))
+        
+        return rows

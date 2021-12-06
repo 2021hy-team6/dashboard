@@ -30,14 +30,17 @@ class Psql:
     def _set_connection(self):
         if self.psql_pool:
             return True
-            
-        # Create Connection Pools
-        self.psql_pool = psycopg2.pool.SimpleConnectionPool(1, self.config['maxpool'],
-            host=self.config['host'],
-            port=self.config['port'],
-            dbname=self.config['dbname'],
-            user=self.config['user'],
-            password=self.config['password'])
+        
+        try:
+            # Create Connection Pools
+            self.psql_pool = psycopg2.pool.SimpleConnectionPool(1, self.config['maxpool'],
+                host=self.config['host'],
+                port=self.config['port'],
+                dbname=self.config['dbname'],
+                user=self.config['user'],
+                password=self.config['password'])
+        except BaseException as err:
+            print(f"Unexpected {err=}, {type(err)=}")
         
         if self.psql_pool:
             print('Successfully Connected')

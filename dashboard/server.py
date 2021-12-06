@@ -13,13 +13,21 @@ def index():
     return jsonify({
                     'db_info': psql.get_metadata(),
                     'statistics_link' : [
-                        
+                        '/stats/day/ratio',
+                        '/stats/day/cnt',
+                        '/stats/day/rec',
+                        '/stats/day/time',
+                        '/stats/week/usage',
+                        '/stats/mon/comp',
+                        '/stats/ann/cnt'
                     ],
                     'create_dummy_link' : [
                         '/dummy/categories',
                         '/dummy/detections'
                     ]})
 
+
+# Create dummies
 @app.route('/dummy/categories')
 def dummy_categories():
     return jsonify(mockStats.create_categories())
@@ -28,17 +36,39 @@ def dummy_categories():
 def dummy_detections():
     return jsonify(mockStats.create_detections())
 
-@app.route('/stats/realtime')
-@app.route('/stats/<date_time>/realtime')
-def stats_realtime(date_time=''):
-    return f"<p>{date_time}, {str(date_time)}</p>"
 
-@app.route('/stats/categories')
-@app.route('/stats/<date_time>/categories')
-def stats_categories(date_time=''):
-    return jsonify(stats.categories(date_time))
+# Statistics
+@app.route('/stats/day/ratio')
+@app.route('/stats/<date_time>/day/ratio')
+def stats_day_ratio(date_time=''):
+    return jsonify(stats.day_ratio(date_time))
 
-@app.route('/stats/dailygraph')
-@app.route('/stats/<date_time>/dailygraph')
-def stats_dailygraph(date_time=''):
-    return jsonify(stats.dailygraph(date_time))
+@app.route('/stats/day/cnt')
+@app.route('/stats/<date_time>/day/cnt')
+def stats_day_cnt(date_time=''):
+    return jsonify(stats.day_cnt(date_time))
+
+@app.route('/stats/week/usage')
+@app.route('/stats/<date_time>/week/usage')
+def stats_week_usage(date_time=''):
+    return jsonify(stats.week_usage(date_time))
+
+@app.route('/stats/day/rec')
+@app.route('/stats/<date_time>/day/rec')
+def stats_day_rec(date_time=''):
+    return jsonify(stats.day_rec(date_time))
+
+@app.route('/stats/day/time')
+@app.route('/stats/<date_time>/day/time')
+def stats_day_time(date_time=''):
+    return jsonify(stats.day_time(date_time))
+
+@app.route('/stats/mon/comp')
+@app.route('/stats/<date_time>/mon/comp')
+def stats_mon_comp(date_time=''):
+    return jsonify(stats.mon_comp(date_time))
+    
+@app.route('/stats/ann/cnt')
+@app.route('/stats/<date_time>/ann/cnt')
+def stats_ann_cnt(date_time=''):
+    return jsonify(stats.ann_cnt(date_time))
