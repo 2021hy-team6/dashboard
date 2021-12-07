@@ -15,7 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 
@@ -43,20 +44,51 @@ import {
 // core components
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
 
-import {
-  dashboardPanelChart,
-  dashboardShippedProductsChart,
-  dashboardAllProductsChart,
-  dashboard24HoursPerformanceChart,
-} from "variables/charts.js";
+import axios from 'axios';
+import { fetchChart } from "charts/ChartUtils.js"
 
-// Custom Codes
-import { PannelChart } from "charts/PannelChart.js"
-import { dailyChartSample } from "variables/sampleData.js"
+// Charts
+import DayCntChart from "charts/DayCntChart.js"
+import WeekUsageChart from "charts/WeekUsageChart.js"
+import DayRecChart from "charts/DayRecChart.js"
+import DayTimeChart from "charts/DayTimeChart.js"
 
 function Dashboard() {
-  // TODO callback from response
-  const pannelChart = new PannelChart(dailyChartSample);
+  const statDate = '2021-12-01';
+  
+  // Charts
+  const [dayCnt, setDayCnt] = useState(new DayCntChart());
+  const [weekUsage, setWeekUsage] = useState(new WeekUsageChart());
+  const [dayRec, setDayRec] = useState(new DayRecChart());
+  const [dayTime, setDayTime] = useState(new DayTimeChart());
+  
+  // Tables
+  const [monComp, setMonComp] = useState([]);
+  const [annCnt, setAnnCnt] = useState([]);
+  
+  const fetchTable = async (url, setter) => {
+    axios.get(url)
+      .then((response) => {
+        setter(response.data);
+      }).catch((e) => {
+        setter([]);
+        console.error(e);
+      });
+  };
+
+  useEffect(() => {
+    const basepath = "http://127.0.0.1:5000/stats";
+    
+    // Get Charts
+    fetchChart(`${basepath}/${statDate}/day/cnt`, setDayCnt, DayCntChart);
+    fetchChart(`${basepath}/${statDate}/week/usage`, setWeekUsage, WeekUsageChart);
+    fetchChart(`${basepath}/${statDate}/day/rec`, setDayRec, DayRecChart);
+    fetchChart(`${basepath}/${statDate}/day/time`, setDayTime, DayTimeChart);
+    
+    // Get Tables
+    fetchTable(`${basepath}/${statDate}/mon/comp`, setMonComp);
+    fetchTable(`${basepath}/${statDate}/ann/cnt`, setAnnCnt);
+  }, []);
 
   return (
     <>
@@ -64,8 +96,8 @@ function Dashboard() {
         size="lg"
         content={
           <Line
-            data={pannelChart.data}
-            options={pannelChart.options}
+            data={dayCnt.data}
+            options={dayCnt.options}
           />
         }
       />
@@ -80,8 +112,8 @@ function Dashboard() {
               <CardBody>
                 <div className="chart-area">
                   <Bar
-                    data={dashboard24HoursPerformanceChart.data}
-                    options={dashboard24HoursPerformanceChart.options}
+                    data={weekUsage.data}
+                    options={weekUsage.options}
                   />
                 </div>
               </CardBody>
@@ -101,8 +133,8 @@ function Dashboard() {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={dashboardAllProductsChart.data}
-                    options={dashboardAllProductsChart.options}
+                    data={dayRec.data}
+                    options={dayRec.options}
                   />
                 </div>
               </CardBody>
@@ -123,8 +155,8 @@ function Dashboard() {
               <CardBody>
                 <div className="chart-area">
                   <Line
-                    data={dashboardShippedProductsChart.data}
-                    options={dashboardShippedProductsChart.options}
+                    data={dayTime.data}
+                    options={dayTime.options}
                   />
                 </div>
               </CardBody>
@@ -148,37 +180,21 @@ function Dashboard() {
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>Categories</th>
+                      <th>Category</th>
                       <th className="text-right">Last Month</th>
                       <th className="text-right">This Month</th>
                       <th className="text-right">+-</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Plastic</td>
-                      <td className="text-right">11200</td>
-                      <td className="text-right">13232</td>
-                      <td className="text-right">+1232</td>
-                    </tr>
-                    <tr>
-                      <td>Glass</td>
-                      <td className="text-right">1232</td>
-                      <td className="text-right">12313</td>
-                      <td className="text-right">-12312</td>
-                    </tr>
-                    <tr>
-                      <td>Paper</td>
-                      <td className="text-right">123232</td>
-                      <td className="text-right">12122</td>
-                      <td className="text-right">+12323</td>
-                    </tr>
-                    <tr>
-                      <td>Can</td>
-                      <td className="text-right">12322</td>
-                      <td className="text-right">15323</td>
-                      <td className="text-right">-12323</td>
-                    </tr>
+                    {monComp.map(row => (
+	                    <tr>
+                        <td>{row.sup_name}</td>
+                        <td className="text-right">{row.prev_cnt}</td>
+                        <td className="text-right">{row.cnt}</td>
+                        <td className="text-right">{row.diff}</td>
+                      </tr>
+	                  ))}
                   </tbody>
                 </Table>
               </CardBody>
@@ -201,12 +217,14 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Cigarette</td>
-                      <td>Litter</td>
-                      <td className="text-right">32.73%</td>                    
-                    </tr>
+                    {annCnt.map((row, index) => (
+	                    <tr>
+                        <td>{index+1}</td>
+                        <td>{row.obj_name}</td>
+                        <td>{row.sup_name}</td>
+                        <td className="text-right">{row.ratio}%</td>
+                      </tr>
+	                  ))}
                   </tbody>
                 </Table>
               </CardBody>

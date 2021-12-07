@@ -33,16 +33,19 @@ import {
   InputGroupText,
   InputGroupAddon,
   Input,
+  Button,
 } from "reactstrap";
 
 import routes from "routes.js";
 
 function DemoNavbar(props) {
   const location = useLocation();
+  
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
+  
   const toggle = () => {
     if (isOpen) {
       setColor("transparent");
@@ -51,9 +54,11 @@ function DemoNavbar(props) {
     }
     setIsOpen(!isOpen);
   };
+  
   const dropdownToggle = (e) => {
     setDropdownOpen(!dropdownOpen);
   };
+  
   const getBrand = () => {
     var name;
     routes.map((prop, key) => {
@@ -79,10 +84,12 @@ function DemoNavbar(props) {
     });
     return name;
   };
+  
   const openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
     sidebarToggle.current.classList.toggle("toggled");
   };
+  
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && isOpen) {
@@ -91,9 +98,11 @@ function DemoNavbar(props) {
       setColor("transparent");
     }
   };
+  
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
   }, []);
+  
   React.useEffect(() => {
     if (
       window.innerWidth < 993 &&
@@ -103,6 +112,19 @@ function DemoNavbar(props) {
       sidebarToggle.current.classList.toggle("toggled");
     }
   }, [location]);
+  
+  const getToday = () => {
+    let today = new Date();
+    
+    let month = today.getMonth() + 1;
+    month = month >= 10 ? month : '0' + month;
+    
+    let day = today.getDate();
+    day = day >= 10 ? day : '0' + day;
+    
+    return today.getFullYear() + '-' + month + '-' + day;
+  };
+  
   return (
     // add or remove classes depending if we are on full-screen-maps page or not
     <Navbar
@@ -140,28 +162,19 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
+        
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
-          {/*
           <form>
             <InputGroup className="no-border">
-              <Input placeholder="Search..." />
+              <Input type="date" defaultValue={getToday()} />
               <InputGroupAddon addonType="append">
                 <InputGroupText>
-                  <i className="now-ui-icons ui-1_zoom-bold" />
+                  <i type="submit" className="now-ui-icons ui-1_zoom-bold" />
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
           </form>
-          */}
           <Nav navbar>
-            <NavItem>
-              <Link to="#pablo" className="nav-link">
-                <i className="now-ui-icons media-2_sound-wave" />
-                <p>
-                  <span className="d-lg-none d-md-block">Stats</span>
-                </p>
-              </Link>
-            </NavItem>
             <Dropdown
               nav
               isOpen={dropdownOpen}
@@ -170,23 +183,13 @@ function DemoNavbar(props) {
               <DropdownToggle caret nav>
                 <i className="now-ui-icons location_world" />
                 <p>
-                  <span className="d-lg-none d-md-block">Some Actions</span>
+                  <span className="d-lg-none d-md-block">Connection</span>
                 </p>
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag="a">Action</DropdownItem>
-                <DropdownItem tag="a">Another Action</DropdownItem>
-                <DropdownItem tag="a">Something else here</DropdownItem>
+                <DropdownItem tag="a">Local</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <NavItem>
-              <Link to="#pablo" className="nav-link">
-                <i className="now-ui-icons users_single-02" />
-                <p>
-                  <span className="d-lg-none d-md-block">Account</span>
-                </p>
-              </Link>
-            </NavItem>
           </Nav>
         </Collapse>
       </Container>

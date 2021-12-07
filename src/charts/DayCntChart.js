@@ -1,13 +1,12 @@
-// TODO add more
-const colorList = ["#AA3333", "#A333AA", "#33AA33", "#33A3AA"];
+const colorList = ["#69FF4A", "#4AFFFF", "#3266E3", "#33A3AA"];
 
 // Daily Chart Sample
-export class PannelChart {
-  constructor(response){
-    this.xLabels = response['label'];
-    delete response['label'];
+export default class DayCntChart {
+  constructor(param = {}){
+    this.xLabels = param['label'];
+    delete param['label'];
     
-    this.datasets = Object.entries(response).map((kv, index) => {
+    this.datasets = Object.entries(param).map((kv, index) => {
       return {
         label: kv[0],
         color: colorList[index % colorList.length],
@@ -29,12 +28,13 @@ export class PannelChart {
   }
 
   data = (canvas) => {
-    console.log(canvas);
     return {
       labels: this.xLabels,
       datasets: this.datasets.map((e) => {
         return {
           label: e.label,
+          backgroundColor: this.getGradientFill(canvas, e.color),
+          data: e.data,
           borderColor: e.color,
           pointBorderColor: e.color,
           pointBackgroundColor: "#2c2c2c",
@@ -45,10 +45,9 @@ export class PannelChart {
           pointHoverBorderWidth: 2,
           pointRadius: 5,
           fill: true,
-          backgroundColor: this.getGradientFill(canvas, e.color),
           borderWidth: 2,
           tension: 0.4,
-          data: e.data,
+          
         }
       })
     }
