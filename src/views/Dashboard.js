@@ -27,6 +27,8 @@ import {
   CardBody,
   CardFooter,
   CardTitle,
+  Collapse,
+  Dropdown,
   Row,
   Col,
   UncontrolledDropdown,
@@ -37,7 +39,11 @@ import {
   Button,
   Label,
   FormGroup,
+  Nav,
   Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
   UncontrolledTooltip,
 } from "reactstrap";
 
@@ -53,19 +59,37 @@ import WeekUsageChart from "charts/WeekUsageChart.js"
 import DayRecChart from "charts/DayRecChart.js"
 import DayTimeChart from "charts/DayTimeChart.js"
 
+
+
+
 function Dashboard() {
-  const statDate = '2021-12-01';
-  
+
+  const [date, setDate] = useState('2021-05-10')
+
+  const handleChange = (e) => {
+    setDate(e.target.value);
+  }
+
   // Charts
   const [dayCnt, setDayCnt] = useState(new DayCntChart());
   const [weekUsage, setWeekUsage] = useState(new WeekUsageChart());
   const [dayRec, setDayRec] = useState(new DayRecChart());
   const [dayTime, setDayTime] = useState(new DayTimeChart());
+  const [isOpen, setIsOpen] = React.useState(false);
   
   // Tables
   const [monComp, setMonComp] = useState([]);
   const [annCnt, setAnnCnt] = useState([]);
   
+  const toggle = () => {
+    if (isOpen) {
+      setColor("transparent");
+    } else {
+      setColor("white");
+    }
+    setIsOpen(!isOpen);
+  };
+
   const fetchTable = async (url, setter) => {
     axios.get(url)
       .then((response) => {
@@ -78,7 +102,7 @@ function Dashboard() {
 
   useEffect(() => {
     const basepath = "http://127.0.0.1:5000/stats";
-    
+    const statDate = date;
     // Get Charts
     fetchChart(`${basepath}/${statDate}/day/cnt`, setDayCnt, DayCntChart);
     fetchChart(`${basepath}/${statDate}/week/usage`, setWeekUsage, WeekUsageChart);
@@ -92,6 +116,7 @@ function Dashboard() {
 
   return (
     <>
+      
       <PanelHeader
         size="lg"
         content={
@@ -106,7 +131,7 @@ function Dashboard() {
           <Col xs={12} md={4}>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">This Week</h5>
+                <h5 className="card-category">This Week {date}</h5>
                 <CardTitle tag="h4">Usages</CardTitle>
               </CardHeader>
               <CardBody>
@@ -127,7 +152,9 @@ function Dashboard() {
           <Col xs={12} md={4}>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Today</h5>
+                <h5 className="card-category">Today
+                  <Input type="date" defaultValue={date} onChange={handleChange} />
+                </h5>
                 <CardTitle tag="h4">Recyclable Rates</CardTitle>
               </CardHeader>
               <CardBody>

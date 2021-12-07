@@ -15,7 +15,8 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import { data } from "jquery";
+import React, {useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Collapse,
@@ -37,6 +38,7 @@ import {
 } from "reactstrap";
 
 import routes from "routes.js";
+import { setConstantValue } from "typescript";
 
 function DemoNavbar(props) {
   const location = useLocation();
@@ -124,8 +126,10 @@ function DemoNavbar(props) {
     
     return today.getFullYear() + '-' + month + '-' + day;
   };
-  
+
+
   return (
+    
     // add or remove classes depending if we are on full-screen-maps page or not
     <Navbar
       color={
@@ -163,10 +167,10 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
         
-        <Collapse isOpen={isOpen} navbar className="justify-content-end">
+        {/* <Collapse isOpen={isOpen} navbar className="justify-content-end">
           <form>
             <InputGroup className="no-border">
-              <Input type="date" defaultValue={getToday()} />
+              <Input type="date" defaultValue={date} onChange={handleChange} />
               <InputGroupAddon addonType="append">
                 <InputGroupText>
                   <i type="submit" className="now-ui-icons ui-1_zoom-bold" />
@@ -191,7 +195,7 @@ function DemoNavbar(props) {
               </DropdownMenu>
             </Dropdown>
           </Nav>
-        </Collapse>
+        </Collapse> */}
       </Container>
     </Navbar>
   );
