@@ -167,8 +167,8 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
         
-        {/* <Collapse isOpen={isOpen} navbar className="justify-content-end">
-          <form>
+        <Collapse isOpen={isOpen} navbar className="justify-content-end">
+          {/* <form>
             <InputGroup className="no-border">
               <Input type="date" defaultValue={date} onChange={handleChange} />
               <InputGroupAddon addonType="append">
@@ -177,8 +177,8 @@ function DemoNavbar(props) {
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
-          </form>
-          <Nav navbar>
+          </form> */}
+          {/* <Nav navbar>
             <Dropdown
               nav
               isOpen={dropdownOpen}
@@ -194,8 +194,8 @@ function DemoNavbar(props) {
                 <DropdownItem tag="a">Local</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-          </Nav>
-        </Collapse> */}
+          </Nav> */}
+        </Collapse>
       </Container>
     </Navbar>
   );
