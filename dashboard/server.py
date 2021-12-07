@@ -1,9 +1,12 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from db import Psql
 from mock_stats import MockStats
 from stats import Stats
 
 app = Flask(__name__)
+CORS(app)
+
 psql = Psql()
 mockStats = MockStats(psql)
 stats = Stats(psql)

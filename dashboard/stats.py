@@ -45,7 +45,7 @@ class Stats:
         rows = self.psql.query(sql['day_cnt'], (dt_string, dt_string))
         
         # Parse results
-        result = {'label': [row['label'] for row in rows]}
+        result = {'label': list(range(0, 24))}
         
         sup_names = set([row['sup_name'] for row in rows])
         for sup_name in sup_names:

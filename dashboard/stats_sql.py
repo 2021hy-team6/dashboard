@@ -21,25 +21,36 @@ SELECT S.sup_name AS sup_name
     
     # Daily counts
     'day_cnt': """
-SELECT T3.hour AS label
-     , COALESCE(T3.sup_name, 'Total') AS sup_name
-	 , count(T1.hour) AS cnt
-  FROM (SELECT extract(hour from created_at) AS hour
-			 , C.sup_id
-		  FROM image I
-			 , detection D
-			 , category C
-		 WHERE I.img_id = D.img_id
-		   AND D.obj_name = C.obj_name
-		   AND timestamp %s <= I.created_at
+WITH W1 AS (
+	SELECT T3.hour AS label
+		 , T3.sup_name AS sup_name
+		 , count(T1.hour) AS cnt
+	  FROM (SELECT extract(hour from created_at) AS hour
+				 , C.sup_id
+			  FROM image I
+				 , detection D
+				 , category C
+			 WHERE I.img_id = D.img_id
+			   AND D.obj_name = C.obj_name
+			   AND timestamp %s <= I.created_at
 		   AND I.created_at <= (timestamp %s + interval '1' day)) T1
- RIGHT OUTER JOIN
-       (SELECT T2.hour, S.sup_id, S.sup_name
+	 RIGHT OUTER JOIN
+		   (SELECT T2.hour, S.sup_id, S.sup_name
 		  FROM generate_series(0, 23) AS T2(hour)
-		     , super_category S
-	   ) T3 ON (T1.hour = T3.hour AND T1.sup_id = T3.sup_id)
- GROUP BY T3.hour, ROLLUP(T3.sup_name)
- ORDER BY T3.hour, T3.sup_name;""",
+			 , super_category S
+		   ) T3 ON (T1.hour = T3.hour AND T1.sup_id = T3.sup_id)
+	 GROUP BY T3.hour, T3.sup_name
+)
+SELECT W1.label, W1.sup_name, W1.cnt
+  FROM W1
+ WHERE W1.sup_name IN
+       (SELECT sup_name
+	      FROM W1
+		 GROUP BY sup_name
+		 ORDER BY count(*)
+		 FETCH FIRST 3 ROWS ONLY
+	   )
+ ORDER BY W1.label, W1.sup_name;""",
     
     # Usage counts
     'week_usage': """
@@ -136,7 +147,7 @@ SELECT S.sup_name
 	 , super_category S
  WHERE T2.sup_id = S.sup_id
  ORDER BY ABS(COALESCE(T2.cnt, 0)-COALESCE(T1.cnt, 0)) DESC
- FETCH FIRST 10 ROWS only;""",
+ FETCH FIRST 5 ROWS only;""",
     
     # Annual Count
     'ann_cnt': """
@@ -156,5 +167,5 @@ SELECT D.obj_name
    AND S.is_recyclable = true
  GROUP BY D.obj_name, S.sup_name
  ORDER BY cnt DESC, D.obj_name
- FETCH FIRST 10 ROWS only;"""
+ FETCH FIRST 5 ROWS only;"""
 }
