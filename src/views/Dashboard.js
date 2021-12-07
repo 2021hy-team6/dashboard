@@ -59,15 +59,24 @@ import WeekUsageChart from "charts/WeekUsageChart.js"
 import DayRecChart from "charts/DayRecChart.js"
 import DayTimeChart from "charts/DayTimeChart.js"
 
-
-
-
 function Dashboard() {
+  
+  const getToday = () => {
+    let today = new Date();
+    
+    let month = today.getMonth() + 1;
+    month = month >= 10 ? month : '0' + month;
+    
+    let day = today.getDate();
+    day = day >= 10 ? day : '0' + day;
+    
+    return today.getFullYear() + '-' + month + '-' + day;
+  };
+  
+  const [statDate, setStatDate] = useState(getToday());
 
-  const [date, setDate] = useState('2021-05-10')
-
-  const handleChange = (e) => {
-    setDate(e.target.value);
+  const statDateHandler = (e) => {
+    setStatDate(e.target.value);
   }
 
   // Charts
@@ -80,15 +89,6 @@ function Dashboard() {
   // Tables
   const [monComp, setMonComp] = useState([]);
   const [annCnt, setAnnCnt] = useState([]);
-  
-  const toggle = () => {
-    if (isOpen) {
-      setColor("transparent");
-    } else {
-      setColor("white");
-    }
-    setIsOpen(!isOpen);
-  };
 
   const fetchTable = async (url, setter) => {
     axios.get(url)
@@ -99,10 +99,10 @@ function Dashboard() {
         console.error(e);
       });
   };
-
+  
+  const basepath = "http://127.0.0.1:5000/stats";
+  
   useEffect(() => {
-    const basepath = "http://127.0.0.1:5000/stats";
-    const statDate = date;
     // Get Charts
     fetchChart(`${basepath}/${statDate}/day/cnt`, setDayCnt, DayCntChart);
     fetchChart(`${basepath}/${statDate}/week/usage`, setWeekUsage, WeekUsageChart);
@@ -112,7 +112,7 @@ function Dashboard() {
     // Get Tables
     fetchTable(`${basepath}/${statDate}/mon/comp`, setMonComp);
     fetchTable(`${basepath}/${statDate}/ann/cnt`, setAnnCnt);
-  }, []);
+  }, [statDate]);
 
   return (
     <>
@@ -130,7 +130,7 @@ function Dashboard() {
           <Col xs={12} md={4}>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">This Week {date}</h5>
+                <h5 className="card-category">This Week</h5>
                 <CardTitle tag="h4">Usages</CardTitle>
               </CardHeader>
               <CardBody>
@@ -151,10 +151,12 @@ function Dashboard() {
           <Col xs={12} md={4}>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Today
-                  <Input type="date" defaultValue={date} onChange={handleChange} />
+                <h5 className="card-category">
+                  <Input type="date" bsSize="sm" className="text-center"
+                      style={{color: '#444', borderRadius: '3px', borderColor: '#9A9A9A', backgroundColor: '#e5e5e5'}}
+                      defaultValue={statDate} onChange={statDateHandler} />
                 </h5>
-                <CardTitle tag="h4">Recyclable Rates</CardTitle>
+                <CardTitle tag="h4" style={{marginTop: 0}} >Recyclable Rates</CardTitle>
               </CardHeader>
               <CardBody>
                 <div className="chart-area">
@@ -175,7 +177,7 @@ function Dashboard() {
           <Col xs={12} md={4}>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">An Hour</h5>
+                <h5 className="card-category">Today</h5>
                 <CardTitle tag="h4">Detection Time</CardTitle>
               </CardHeader>
               <CardBody>
