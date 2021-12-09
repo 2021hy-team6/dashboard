@@ -1,9 +1,9 @@
 {
-  "name": "now-ui-dashboard-react",
+  "name": "recycle-assistant-dashboard",
   "version": "1.5.0",
   "main": "dist/index.js",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/now-ui-dashboard-react/#/",
+  "homepage": "https://demos.creative-tim.com/recycle-assistant-dashboard/#/",
   "dependencies": {
     "axios": "^0.24.0",
     "bootstrap": "4.6.0",

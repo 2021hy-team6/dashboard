@@ -35,6 +35,7 @@ var dashRoutes = [
     component: Dashboard,
     layout: "/admin",
   },
+  /*
   {
     path: "/detection",
     name: "Detection",
@@ -49,6 +50,7 @@ var dashRoutes = [
     component: Detection,
     layout: "/admin",
   },
+  */
   /*
   {
     path: "/icons",
