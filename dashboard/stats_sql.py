@@ -146,6 +146,7 @@ SELECT S.sup_name
 	   ) T2 ON (T1.sup_id = T2.sup_id)
 	 , super_category S
  WHERE T2.sup_id = S.sup_id
+   AND S.is_recyclable = true
  ORDER BY ABS(COALESCE(T2.cnt, 0)-COALESCE(T1.cnt, 0)) DESC
  FETCH FIRST 5 ROWS only;""",
     
@@ -154,18 +155,21 @@ SELECT S.sup_name
 SELECT D.obj_name
      , S.sup_name
      , count(*) as cnt
-	 , ROUND(count(*)::numeric / count(*) OVER() * 100, 2) as ratio
-  FROM image I
+	 , ROUND(count(*)::numeric / I.img_cnt * 100, 2) as ratio
+  FROM (SELECT img_id
+		     , count(*) OVER() AS img_cnt
+		  FROM image
+		 WHERE "timestamp" (%s || '-01-01 00:00:00') <= created_at
+           AND created_at <= ("timestamp" (%s || '-01-01 00:00:00') + interval '1' year)
+       ) I
      , detection D
-	 , category C
-	 , super_category S
+     , category C
+     , super_category S
  WHERE I.img_id = D.img_id
    AND D.obj_name = C.obj_name
    AND C.sup_id = S.sup_id
-   AND "timestamp" (%s || '-01-01 00:00:00') <= I.created_at
-   AND I.created_at <= ("timestamp" (%s || '-01-01 00:00:00') + interval '1' year)
    AND S.is_recyclable = true
- GROUP BY D.obj_name, S.sup_name
+ GROUP BY D.obj_name, S.sup_name, I.img_cnt
  ORDER BY cnt DESC, D.obj_name
  FETCH FIRST 5 ROWS only;"""
 }

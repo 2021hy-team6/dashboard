@@ -13,8 +13,8 @@ class MockStats:
         name = ''.join(name).capitalize()
         return name
 
-    def get_random_datetime(self, yyyy, mm, dd):
-        dttm = datetime.datetime(yyyy, mm, dd) + random.random() * datetime.timedelta(days=1)
+    def get_random_datetime(self, yyyy, mm, dd, timedelta):
+        dttm = datetime.datetime(yyyy, mm, dd) + random.random() * timedelta
         return dttm.strftime("%Y-%m-%d %H:%M:%S")
     
     def create_categories(self):
@@ -52,7 +52,7 @@ class MockStats:
                 'category': self.psql.query('select * from category')}
 
     
-    def create_detections(self):
+    def create_detections(self, yyyyMMdd='20211101', days=30, images=2000):
         if self.psql.query('select count(*) as cnt from detection')[0]['cnt'] > 0:
             return {'image': self.psql.query('select * from image'),
                     'detection': self.psql.query('select * from detection')}
@@ -62,8 +62,14 @@ class MockStats:
                                (msec, created_at)
                         VALUES (%s, timestamp %s)"""
         
-        for _ in range(144):
-            self.psql.execute(sql_string, (random.choice(range(100, 300)), self.get_random_datetime(2021, 12, 1)))
+        year = int(yyyyMMdd[0:4])
+        month = int(yyyyMMdd[4:6])
+        day = int(yyyyMMdd[6:8])
+        
+        for _ in range(images):
+            self.psql.execute(sql_string, 
+                    (random.choice(range(100, 300)),
+                        self.get_random_datetime(year, month, day, datetime.timedelta(days=days))))
         
         # Detection
         sql_string = """INSERT INTO detection
