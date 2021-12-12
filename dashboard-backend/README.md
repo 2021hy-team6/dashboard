@@ -1,6 +1,6 @@
-# Recycle Assistant
+# Dashboard Backend
 
-Backend Service for the Recycle Assistant Project
+Back-end for the Recycling Assistant Dashboard
 
 ### Requirements
 
