@@ -1,1 +1,15 @@
-/node_modules/
+# IDE
+.vscode
+.idea
+.DS_Store
+
+# Backend - PGDATA
+dashboard-backend/db/psql/pgdata
+
+# Node Related
+dashbaord-frontend/node_modules/
+
+# Python Related
+.venv
+venv
+__pycache__

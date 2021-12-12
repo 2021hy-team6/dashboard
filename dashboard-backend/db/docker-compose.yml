@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  # Database
+  psql:
+    environment:
+      TZ: "Asia/Seoul"
+      POSTGRES_DB: "db_recm8"
+      POSTGRES_USER_FILE: "/run/secrets/user"
+      POSTGRES_PASSWORD_FILE: "/run/secrets/passwd"
+      PGDATA: /var/lib/postgresql/data/app
+    build:
+      context: ./psql
+      dockerfile: ./Dockerfile
+    volumes:
+      - psql-data:/var/lib/postgresql/data
+      - ./psql/pgdata:/var/lib/postgresql/data/app
+    ports:
+      - 127.0.0.1:6002:5432
+    networks:
+      intranet:
+        ipv4_address: 172.28.0.62
+  
+  # Query Tool
+  pgadmin:
+    environment:
+      TZ: "Asia/Seoul"
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "mysecretpassword"
+    image: dpage/pgadmin4:6.2
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - 127.0.0.1:6001:80
+    networks:
+      intranet:
+        ipv4_address: 172.28.0.61
+
+networks:
+  intranet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  psql-data:
+  pgadmin-data:
